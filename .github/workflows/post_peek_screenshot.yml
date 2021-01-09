@@ -30,15 +30,15 @@ jobs:
         with:
           path: ./screenshots/screenshot_*.png
           client_id: ${{secrets.IMGUR_CLIENT_ID}}
-      - name: Generate the markdowns for the screenshot and put it in the DETAILED_IMGS_MARKDOWN env var
-        if: success()
-        env:  # need to set IMG_URLS for script to work
-          IMG_URLS: ${{ steps.icons_detailed_img_step.outputs.imgur_urls }}
-        shell: bash
-        run: |   
-          echo 'DETAILED_IMGS_MARKDOWN<<EOF' >> $GITHUB_ENV
-          python ../.github/scripts/generate_screenshot_markdown.py >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+      # - name: Generate the markdowns for the screenshot and put it in the DETAILED_IMGS_MARKDOWN env var
+      #   if: success()
+      #   env:  # need to set IMG_URLS for script to work
+      #     IMG_URLS: ${{ steps.icons_detailed_img_step.outputs.imgur_urls }}
+      #   shell: bash
+      #   run: |   
+      #     echo 'DETAILED_IMGS_MARKDOWN<<EOF' >> $GITHUB_ENV
+      #     python ../.github/scripts/generate_screenshot_markdown.py >> $GITHUB_ENV
+      #     echo 'EOF' >> $GITHUB_ENV
       - name: Comment on the PR about the result
         uses: NejcZdovc/comment-pr@v1.1.1
         with:
