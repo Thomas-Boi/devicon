@@ -1,21 +1,36 @@
-name: Post the screenshots into a comment from Peek Icons workflow
+name: Peek Icons
 on:
-  workflow_run:
-    workflows: ["Peek Icons"]
-    types: 
-      - completed
-jobs: 
-  post_screenshots_in_comment:
-    name: Post the screenshot
-    runs-on: ubuntu-18.04
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  pull_request:
+      types: [labeled]
+jobs:
+  build:
+    name: Get Fonts From Icomoon
+    if: contains(github.event.pull_request.labels.*.name, 'bot:peek')
+    runs-on: windows-2019
     steps:
-      - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v2.11.0
+      - uses: actions/checkout@v2
+      - name: Setup Python v3.8
+        uses: actions/setup-python@v2
+        with: 
+          python-version: 3.8
+      - name: Install dependencies 
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ./.github/scripts/requirements.txt
+      - name: Run icomoon_peek.py
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        shell: cmd
+        run: >
+          python ./.github/scripts/icomoon_peek.py 
+          ./.github/scripts/build_assets/geckodriver-v0.27.0-win64/geckodriver.exe ./icomoon.json 
+          ./devicon.json ./icons ./ --headless --pr_title "%PR_TITLE%"
+      - name: Upload geckodriver.log for debugging purposes
+        uses: actions/upload-artifact@v2
+        if: failure()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: peek_icons.yml
-          run_id: ${{ github.event.workflow_run.id }}
+          name: geckodriver-log
+          path: ./geckodriver.log
       - name: Upload screenshot of the newly made icons
         id: icons_overview_img_step
         uses: devicons/public-upload-to-imgur@v2.1
@@ -32,13 +47,13 @@ jobs:
           client_id: ${{secrets.IMGUR_CLIENT_ID}}
       - name: Generate the markdowns for the screenshot and put it in the DETAILED_IMGS_MARKDOWN env var
         if: success()
-        env:  # need to set IMG_URLS for script to work
+        env:
           IMG_URLS: ${{ steps.icons_detailed_img_step.outputs.imgur_urls }}
-        shell: bash
         run: |   
           echo 'DETAILED_IMGS_MARKDOWN<<EOF' >> $GITHUB_ENV
           python ./.github/scripts/generate_screenshot_markdown.py >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
+        shell: bash
       - name: Comment on the PR about the result
         if: success()
         uses: github-actions-up-and-running/pr-comment@v1.0.1
