@@ -46,7 +46,7 @@ jobs:
         id: create
         if: success()
         env:
-          OVERVIEW_IMG_URL: ${{ fromJSON(steps.icons_overview_img_step.outputs.imgur_urls)[0] }}
+          # OVERVIEW_IMG_URL: ${{ fromJSON(steps.icons_overview_img_step.outputs.imgur_urls)[0] }}
           MESSAGE: hi
         with:
           type: create
