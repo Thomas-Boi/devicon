@@ -38,6 +38,11 @@ jobs:
           name: geckodriver-log
           path: ./geckodriver.log
       - name: Comment on the PR about the result
+        uses: NejcZdovc/comment-pr@v1.1.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: hi
+      - name: Comment on the PR about the result
         if: failure()
         uses: github-actions-up-and-running/pr-comment@v1.0.1
         env:
