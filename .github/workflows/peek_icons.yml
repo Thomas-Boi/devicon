@@ -14,7 +14,6 @@ jobs:
         uses: jungwinter/comment@v1 # let us comment on a specific PR
         id: create
         env:
-          OVERVIEW_IMG_URL: ${{ fromJSON(steps.icons_overview_img_step.outputs.imgur_urls)[0] }}
           MESSAGE: hi
         with:
           type: create
