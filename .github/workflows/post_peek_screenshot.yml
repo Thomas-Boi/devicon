@@ -8,7 +8,7 @@ jobs:
   post_screenshots_in_comment:
     name: Post the screenshot
     runs-on: ubuntu-18.04
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Download workflow artifact
         uses: dawidd6/action-download-artifact@v2.11.0
@@ -39,32 +39,16 @@ jobs:
       #     echo 'DETAILED_IMGS_MARKDOWN<<EOF' >> $GITHUB_ENV
       #     python ../.github/scripts/generate_screenshot_markdown.py >> $GITHUB_ENV
       #     echo 'EOF' >> $GITHUB_ENV
+      - env:
+          issue_number: ${{ github.event.workflow_run.pull_requests.number }}
+        run: echo $issue_number
       - name: Create comment
         uses: jungwinter/comment@v1 # let us comment on a specific PR
         id: create
         if: success()
         env:
           # OVERVIEW_IMG_URL: ${{ fromJSON(steps.icons_overview_img_step.outputs.imgur_urls)[0] }}
-          MESSAGE: |
-            Hi!
-
-            I'm Devicons' Peek Bot and I just peeked at the icons that you wanted to add using [icomoon.io](https://icomoon.io/app/#/select).
-            Here is the result below:
-
-            ![Peeked Icons (top left)]({0})
-
-            Here are the zoomed-in screenshots of the added icons:
-            {1}
-
-            Note: If the images don't show up, it's probably because it has been autodeleted by Imgur after 6 months due to our API choice.
-
-            The maintainers will now take a look at it and decide whether to merge your PR.
-
-            Thank you for contributing to Devicon! I hope everything works out and your icons are accepted into the repo.
-
-            Cheers :),
-      
-            Peek Bot
+          MESSAGE: hi
         with:
           type: create
           body: ${{ env.MESSAGE }}
