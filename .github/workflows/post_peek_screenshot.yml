@@ -8,28 +8,28 @@ jobs:
   post_screenshots_in_comment:
     name: Post the screenshot
     runs-on: ubuntu-18.04
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v2.11.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: peek_icons.yml
-          run_id: ${{ github.event.workflow_run.id }}
-      - name: Upload screenshot of the newly made icons
-        id: icons_overview_img_step
-        uses: devicons/public-upload-to-imgur@v2.1
-        if: success()
-        with:
-          path: ./screenshots/new_icons.png
-          client_id: ${{secrets.IMGUR_CLIENT_ID}}
-      - name: Upload zoomed in screenshot of the newly made icons
-        id: icons_detailed_img_step
-        uses: devicons/public-upload-to-imgur@v2.1
-        if: success()
-        with:
-          path: ./screenshots/screenshot_*.png
-          client_id: ${{secrets.IMGUR_CLIENT_ID}}
+      # - name: Download workflow artifact
+      #   uses: dawidd6/action-download-artifact@v2.11.0
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     workflow: peek_icons.yml
+      #     run_id: ${{ github.event.workflow_run.id }}
+      # - name: Upload screenshot of the newly made icons
+      #   id: icons_overview_img_step
+      #   uses: devicons/public-upload-to-imgur@v2.1
+      #   if: success()
+      #   with:
+      #     path: ./screenshots/new_icons.png
+      #     client_id: ${{secrets.IMGUR_CLIENT_ID}}
+      # - name: Upload zoomed in screenshot of the newly made icons
+      #   id: icons_detailed_img_step
+      #   uses: devicons/public-upload-to-imgur@v2.1
+      #   if: success()
+      #   with:
+      #     path: ./screenshots/screenshot_*.png
+      #     client_id: ${{secrets.IMGUR_CLIENT_ID}}
       # - name: Generate the markdowns for the screenshot and put it in the DETAILED_IMGS_MARKDOWN env var
       #   if: success()
       #   env:  # need to set IMG_URLS for script to work
@@ -40,20 +40,21 @@ jobs:
       #     python ../.github/scripts/generate_screenshot_markdown.py >> $GITHUB_ENV
       #     echo 'EOF' >> $GITHUB_ENV
       - env:
-          issue_number: ${{ github.event.workflow_run.pull_requests.number }}
+          workflow_run: ${{ toJson(github.event.workflow_run) }}
+          pr: ${{ toJson(github.event.workflow_run.pull_requests) }}
         run: echo $issue_number
-      - name: Create comment
-        uses: jungwinter/comment@v1 # let us comment on a specific PR
-        id: create
-        if: success()
-        env:
+      # - name: Create comment
+      #   uses: jungwinter/comment@v1 # let us comment on a specific PR
+      #   id: create
+      #   if: success()
+      #   env:
           # OVERVIEW_IMG_URL: ${{ fromJSON(steps.icons_overview_img_step.outputs.imgur_urls)[0] }}
-          MESSAGE: hi
-        with:
-          type: create
-          body: ${{ env.MESSAGE }}
-          issue_number: ${{ github.event.workflow_run.pull_requests.number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+        #   MESSAGE: hi
+        # with:
+        #   type: create
+        #   body: ${{ env.MESSAGE }}
+        #   issue_number: ${{ github.event.workflow_run.pull_requests.number }}
+        #   token: ${{ secrets.GITHUB_TOKEN }}
       #   with:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
       #     message: ${{format(env.MESSAGE, env.OVERVIEW_IMG_URL, env.DETAILED_IMGS_MARKDOWN)}}

@@ -8,61 +8,55 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'bot:peek')
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python v3.8
-        uses: actions/setup-python@v2
-        with: 
-          python-version: 3.8
-      - name: Install dependencies 
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r ./.github/scripts/requirements.txt
-      - name: Run icomoon_peek.py
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-        shell: cmd
-        run: >
-          python ./.github/scripts/icomoon_peek.py 
-          ./.github/scripts/build_assets/geckodriver-v0.27.0-win64/geckodriver.exe ./icomoon.json 
-          ./devicon.json ./icons ./ --headless --pr_title "%PR_TITLE%"
-      - name: Upload screenshots for comments
-        uses: actions/upload-artifact@v2
-        if: success()
-        with:
-          name: screenshots
-          path: ./screenshots/*.png
-      - name: Upload geckodriver.log for debugging purposes
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: geckodriver-log
-          path: ./geckodriver.log
-      # - name: Create comment
-      #   uses: jungwinter/comment@v1 # let us comment on a specific PR
+      - run: echo Hello
+      # - uses: actions/checkout@v2
+      # - name: Setup Python v3.8
+      #   uses: actions/setup-python@v2
+      #   with: 
+      #     python-version: 3.8
+      # - name: Install dependencies 
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r ./.github/scripts/requirements.txt
+      # - name: Run icomoon_peek.py
+      #   env:
+      #     PR_TITLE: ${{ github.event.pull_request.title }}
+      #   shell: cmd
+      #   run: >
+      #     python ./.github/scripts/icomoon_peek.py 
+      #     ./.github/scripts/build_assets/geckodriver-v0.27.0-win64/geckodriver.exe ./icomoon.json 
+      #     ./devicon.json ./icons ./ --headless --pr_title "%PR_TITLE%"
+      # - name: Upload screenshots for comments
+      #   uses: actions/upload-artifact@v2
+      #   if: success()
       #   with:
-      #     type: create
-      #     body: Hello there
-      #     issue_number: ${{ github.event.pull_request.number }}
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Comment on the PR about the result
-        if: failure()
-        uses: github-actions-up-and-running/pr-comment@v1.0.1
-        env:
-          MESSAGE: |
-            ~Hi
+      #     name: screenshots
+      #     path: ./screenshots/*.png
+      # - name: Upload geckodriver.log for debugging purposes
+      #   uses: actions/upload-artifact@v2
+      #   if: failure()
+      #   with:
+      #     name: geckodriver-log
+      #     path: ./geckodriver.log
+      # - name: Comment on the PR about the result
+      #   if: failure()
+      #   uses: github-actions-up-and-running/pr-comment@v1.0.1
+      #   env:
+      #     MESSAGE: |
+      #       ~Hi
 
-            I'm Devicons' Peek Bot and it seems we've ran into a problem (sorry!).
+      #       I'm Devicons' Peek Bot and it seems we've ran into a problem (sorry!).
 
-            Please double check and fix the possible issues below:
+      #       Please double check and fix the possible issues below:
 
-            - Your svgs are named and added correctly to the /icons folder as seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#orgGuidelines).
-            - Your icon information has been added to the `devicon.json` as seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#updateDevicon)
-            - Your PR title follows the format seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#overview)
+      #       - Your svgs are named and added correctly to the /icons folder as seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#orgGuidelines).
+      #       - Your icon information has been added to the `devicon.json` as seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#updateDevicon)
+      #       - Your PR title follows the format seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#overview)
 
-            Once everything is fixed, I will try. If I still fail (sorry!), the maintainers will investigate further. 
+      #       Once everything is fixed, I will try. If I still fail (sorry!), the maintainers will investigate further. 
 
-            Best of luck, 
-            Peek Bot :relaxed:
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          message: ${{env.MESSAGE}}
+      #       Best of luck, 
+      #       Peek Bot :relaxed:
+      #   with:
+      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
+      #     message: ${{env.MESSAGE}}
