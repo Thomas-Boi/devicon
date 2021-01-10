@@ -40,9 +40,9 @@ jobs:
       #     python ../.github/scripts/generate_screenshot_markdown.py >> $GITHUB_ENV
       #     echo 'EOF' >> $GITHUB_ENV
       - env:
-          workflow_run: ${{ toJson(github.event.workflow_run) }}
-          pr: ${{ toJson(github.event.workflow_run.pull_requests) }}
-        run: echo $issue_number
+          # workflow_run: ${{ toJson(github.event.workflow_run) }}
+          pr: ${{ toJson(github.event) }}
+        run: echo $pr
       # - name: Create comment
       #   uses: jungwinter/comment@v1 # let us comment on a specific PR
       #   id: create
