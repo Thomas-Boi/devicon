@@ -17,6 +17,8 @@ jobs:
           workflow: peek_icons.yml
           run_id: ${{ github.event.workflow_run.id }}
       - run: cat ./pr_num.txt
+      - run: cat ./pr_num/pr_num.txt
+        if: always()
       # - name: Upload screenshot of the newly made icons
       #   id: icons_overview_img_step
       #   uses: devicons/public-upload-to-imgur@v2.1
