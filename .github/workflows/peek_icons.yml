@@ -10,17 +10,6 @@ jobs:
     env:
       PR_NUMBER: ${{ github.event.number }}
     steps:
-      - name: Create comment
-        uses: jungwinter/comment@v1 # let us comment on a specific PR
-        id: create
-        env:
-          OVERVIEW_IMG_URL: ${{ fromJSON(steps.icons_overview_img_step.outputs.imgur_urls)[0] }}
-          MESSAGE: hi
-        with:
-          type: create
-          body: ${{ env.MESSAGE }}
-          issue_number: ${{ env.PR_NUMBER }}
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Save the pr name in an artifact
         run: echo $PR_NUMBER > pr_num.txt
       - name: Upload the pr name
