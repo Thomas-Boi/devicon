@@ -5,12 +5,29 @@ on:
 jobs:
   build:
     name: Peek Icons
-    if: contains(github.event.pull_request.labels.*.name, 'bot:peek')
+    if: github.event.label.name == 'bot:peek'
     runs-on: windows-2019
+    env:
+      PR_NUMBER: ${{ github.event.number }}
     steps:
-      - env:
-          PR: ${{ toJson(github.event) }}
-        run: echo $PR
+      - name: Create comment
+        uses: jungwinter/comment@v1 # let us comment on a specific PR
+        id: create
+        env:
+          OVERVIEW_IMG_URL: ${{ fromJSON(steps.icons_overview_img_step.outputs.imgur_urls)[0] }}
+          MESSAGE: hi
+        with:
+          type: create
+          body: ${{ env.MESSAGE }}
+          issue_number: ${{ env.PR_NUMBER }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Save the pr name in an artifact
+        run: echo $PR_NUMBER > pr_num.txt
+      - name: Upload the pr name
+        uses: actions/upload-artifact@v2
+        with:
+          name: pr_num
+          path: ./pr_num.txt
       # - uses: actions/checkout@v2
       # - name: Setup Python v3.8
       #   uses: actions/setup-python@v2
