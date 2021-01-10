@@ -11,7 +11,9 @@ jobs:
       PR_NUMBER: ${{ github.event.number }}
     steps:
       - name: Save the pr name in an artifact
-        run: echo $PR_NUMBER > pr_num.txt
+        run: |
+          echo test $PR_NUMBER test
+          echo $PR_NUMBER > pr_num.txt
       - name: Upload the pr name
         uses: actions/upload-artifact@v2
         with:
