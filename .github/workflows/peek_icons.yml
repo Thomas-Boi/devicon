@@ -7,21 +7,7 @@ jobs:
     name: Peek Icons
     if: github.event.label.name == 'bot:peek'
     runs-on: windows-2019
-    env:
-      PR_NUMBER: ${{ github.event.number }}
     steps:
-      - name: Save the pr name in an artifact
-        shell: bash
-        run: |
-          echo test $PR_NUMBER test
-          echo $PR_NUMBER > pr_num.txt
-      - name: Upload the pr name
-        uses: actions/upload-artifact@v2
-        with:
-          name: pr_num
-          path: ./pr_num.txt
-      - name: confirm
-        run: cat ./pr_num.txt
       # - uses: actions/checkout@v2
       # - name: Setup Python v3.8
       #   uses: actions/setup-python@v2
@@ -45,31 +31,41 @@ jobs:
       #   with:
       #     name: screenshots
       #     path: ./screenshots/*.png
-      # - name: Upload geckodriver.log for debugging purposes
-      #   uses: actions/upload-artifact@v2
-      #   if: failure()
-      #   with:
-      #     name: geckodriver-log
-      #     path: ./geckodriver.log
-      # - name: Comment on the PR about the result
-      #   if: failure()
-      #   uses: github-actions-up-and-running/pr-comment@v1.0.1
-      #   env:
-      #     MESSAGE: |
-      #       ~Hi
+      - name: Save the pr name in an artifact
+        shell: bash
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: echo PR_NUMBER > pr_num.txt
+      - name: Upload the pr name
+        uses: actions/upload-artifact@v2
+        with:
+          name: pr_num
+          path: ./pr_num.txt
+      - name: Upload geckodriver.log for debugging purposes
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: geckodriver-log
+          path: ./geckodriver.log
+      - name: Comment on the PR about the result
+        if: failure()
+        uses: github-actions-up-and-running/pr-comment@v1.0.1
+        env:
+          MESSAGE: |
+            ~Hi
 
-      #       I'm Devicons' Peek Bot and it seems we've ran into a problem (sorry!).
+            I'm Devicons' Peek Bot and it seems we've ran into a problem (sorry!).
 
-      #       Please double check and fix the possible issues below:
+            Please double check and fix the possible issues below:
 
-      #       - Your svgs are named and added correctly to the /icons folder as seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#orgGuidelines).
-      #       - Your icon information has been added to the `devicon.json` as seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#updateDevicon)
-      #       - Your PR title follows the format seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#overview)
+            - Your svgs are named and added correctly to the /icons folder as seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#orgGuidelines).
+            - Your icon information has been added to the `devicon.json` as seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#updateDevicon)
+            - Your PR title follows the format seen [here](https://github.com/devicons/devicon/blob/master/CONTRIBUTING.md#overview)
 
-      #       Once everything is fixed, I will try. If I still fail (sorry!), the maintainers will investigate further. 
+            Once everything is fixed, I will try. If I still fail (sorry!), the maintainers will investigate further. 
 
-      #       Best of luck, 
-      #       Peek Bot :relaxed:
-      #   with:
-      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
-      #     message: ${{env.MESSAGE}}
+            Best of luck, 
+            Peek Bot :relaxed:
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          message: ${{env.MESSAGE}}
