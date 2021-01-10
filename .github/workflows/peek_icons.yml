@@ -37,11 +37,13 @@ jobs:
         with:
           name: geckodriver-log
           path: ./geckodriver.log
-      - name: Comment on the PR about the result
-        uses: NejcZdovc/comment-pr@v1.1.1
+      - name: Create comment
+        uses: jungwinter/comment@v1 # let us comment on a specific PR
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: hi
+          type: create
+          body: Hello there
+          issue_number: ${{ github.event.pull_request.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Comment on the PR about the result
         if: failure()
         uses: github-actions-up-and-running/pr-comment@v1.0.1
