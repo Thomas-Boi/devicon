@@ -11,6 +11,7 @@ jobs:
       PR_NUMBER: ${{ github.event.number }}
     steps:
       - name: Save the pr name in an artifact
+        shell: bash
         run: |
           echo test $PR_NUMBER test
           echo $PR_NUMBER > pr_num.txt
