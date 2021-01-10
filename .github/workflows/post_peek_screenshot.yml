@@ -16,7 +16,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: peek_icons.yml
           run_id: ${{ github.event.workflow_run.id }}
-      - run: cat ./pr_num.txt
       - run: cat ./pr_num/pr_num.txt
         if: always()
       # - name: Upload screenshot of the newly made icons

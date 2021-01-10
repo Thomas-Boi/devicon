@@ -17,6 +17,8 @@ jobs:
         with:
           name: pr_num
           path: ./pr_num.txt
+      - name: confirm
+        run: cat ./pr_num.txt
       # - uses: actions/checkout@v2
       # - name: Setup Python v3.8
       #   uses: actions/setup-python@v2
