@@ -41,18 +41,18 @@ jobs:
       #     echo 'DETAILED_IMGS_MARKDOWN<<EOF' >> $GITHUB_ENV
       #     python ../.github/scripts/generate_screenshot_markdown.py >> $GITHUB_ENV
       #     echo 'EOF' >> $GITHUB_ENV
-      # - name: Create comment
-      #   uses: jungwinter/comment@v1 # let us comment on a specific PR
-      #   id: create
-      #   if: success()
-      #   env:
-          # OVERVIEW_IMG_URL: ${{ fromJSON(steps.icons_overview_img_step.outputs.imgur_urls)[0] }}
-        #   MESSAGE: hi
-        # with:
-        #   type: create
-        #   body: ${{ env.MESSAGE }}
-        #   issue_number: ${{ github.event.workflow_run.pull_requests.number }}
-        #   token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create comment
+        uses: jungwinter/comment@v1 # let us comment on a specific PR
+        id: create
+        if: success()
+        env:
+          OVERVIEW_IMG_URL: ${{ fromJSON(steps.icons_overview_img_step.outputs.imgur_urls)[0] }}
+          MESSAGE: hi
+        with:
+          type: create
+          body: ${{ env.MESSAGE }}
+          issue_number: 31
+          token: ${{ secrets.GITHUB_TOKEN }}
       #   with:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
       #     message: ${{format(env.MESSAGE, env.OVERVIEW_IMG_URL, env.DETAILED_IMGS_MARKDOWN)}}
